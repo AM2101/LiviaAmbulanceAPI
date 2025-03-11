@@ -1,0 +1,6 @@
+{
+  "ROUTE": "user",
+  "RMQ_NOTIFICATION_FORGET_EMAIL": "livia_notification_forget_email",
+  "RMQ_NOTIFICATION_OTP_EMAIL": "livia_notification_otp_email",
+  "RMQ_NOTIFICATION_OTP_SMS": "livia_notification_otp_sms"
+}

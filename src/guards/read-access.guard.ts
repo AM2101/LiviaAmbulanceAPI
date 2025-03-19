@@ -14,6 +14,7 @@ import { CommonService } from '../common/common.service';
 import { USER_MODEL, UserDocument } from 'src/schema/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { ROLE_TYPE_LIVIA_ADMIN } from 'src/constants/enum';
+import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class ReadAccessGuard implements CanActivate {
@@ -21,6 +22,7 @@ export class ReadAccessGuard implements CanActivate {
     private jwtService: JwtService,
     private configService: ConfigService,
     private readonly commonService: CommonService,
+    private readonly reflector: Reflector,
     @InjectModel(USER_MODEL) private userModel: Model<UserDocument>,
   ) {}
 
@@ -40,17 +42,19 @@ export class ReadAccessGuard implements CanActivate {
       });
 
       const userId = new Types.ObjectId(payload._id);
+      const roleId = new Types.ObjectId(payload.roleId);
 
       const accessSections = await this.commonService.getAccessSectionsByUserId(
         userId,
+        roleId
       );
 
       const hasReadAccess =
         accessSections.length > 0
           ? accessSections.filter((obj) => {
               if (
-                obj.role === ROLE_TYPE_LIVIA_ADMIN.MANAGE_USERS &&
-                (obj.writeAccess === true || obj.readAccess === true)
+                obj.module.name === context.getClass().name &&
+                obj.readAccess === true
               ) {
                 return true;
               } else {
@@ -58,10 +62,21 @@ export class ReadAccessGuard implements CanActivate {
               }
             }).length > 0
           : false;
+  
+          if(!hasReadAccess){
+            throw new UnauthorizedException('Access denied');
+          }
 
       if (hasReadAccess) {
-        return true;
+        const user = payload;
+        const module = context.getClass().name;
+        const hasAccess = await this.commonService.controllerReadAccess(module, user);
+        if (!hasAccess) {
+          throw new UnauthorizedException('Access denied');
+        }
       }
+  
+      return true;
     } catch (error) {
       console.log('----------------ERROR---------------');
       console.log(error);

@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
@@ -77,36 +78,255 @@ export class CommonService {
     }
   }
 
-  async getAccessSectionsByUserId(userId) {
-    const accessSections = await this.userModel
+  // async getAccessSectionsByUserId(userId,roleId) {
+  //   const accessSections = await this.userModel
+  //     .aggregate([
+  //       {
+  //         $match: {
+  //           roleId: roleId,
+  //         },
+  //       },
+  //       {
+  //         $lookup: {
+  //           from: 'RoleAccess',
+  //           localField: '_id',
+  //           foreignField: 'roleId',
+  //           as: 'RoleAccess',
+  //         },
+  //       },
+  //       {
+  //         $project: {
+  //           'RoleAccess.module': 1,
+  //           'RoleAccess.readAccess': 1,
+  //           'RoleAccess.writeAccess': 1,
+  //         },
+  //       },
+  //     ])
+  //     .exec();
+
+  //   return accessSections.length > 0 && accessSections[0]?.UserRole
+  //     ? accessSections[0].UserRole
+  //     : [];
+  // }
+  // async getAccessSectionsByUserId(userId: any, roleId: any) {
+  //   const accessSections = await this.userModel
+  //     .aggregate([
+  //       // Match the user by roleId
+  //       {
+  //         $match: {
+  //           roleId: roleId, // Match the roleId passed as parameter
+  //         },
+  //       },
+  //       // Lookup the RoleAccess collection based on roleId
+  //       {
+  //         $lookup: {
+  //           from: 'RoleAccess', // The collection to join with
+  //           localField: 'roleId', // Local field in user model to match
+  //           foreignField: 'roleId', // Foreign field in RoleAccess collection
+  //           as: 'RoleAccess', // Alias for the resulting array
+  //         },
+  //       },
+  //       // Project the necessary fields (flatten the RoleAccess array and get only required fields)
+  //       {
+  //         $project: {
+  //           'RoleAccess.module': 1,  // Include module from RoleAccess
+  //           'RoleAccess.readAccess': 1,     // Include readAccess from RoleAccess
+  //           'RoleAccess.writeAccess': 1,    // Include writeAccess from RoleAccess
+  //         },
+  //       },
+  //       // Optionally, if you want to unwind the RoleAccess array (if you expect a single match)
+  //       {
+  //         $unwind: {
+  //           path: '$RoleAccess',
+  //           preserveNullAndEmptyArrays: true, // To ensure you don't get empty results
+  //         },
+  //       },
+  //     ])
+  //     .exec();
+  
+  //   // Return the relevant data from RoleAccess or an empty array if no access found
+  //   return accessSections.length > 0 && accessSections[0]?.RoleAccess
+  //     ? accessSections[0].RoleAccess
+  //     : [];
+  // }
+  
+  // async getAccessSectionsByUserId(userId: any, roleId: any) {
+  //   const accessSections = await this.userModel
+  //     .aggregate([
+  //       // Match the user by roleId
+  //       {
+  //         $match: {
+  //           roleId: roleId, // Match the roleId passed as parameter
+  //         },
+  //       },
+  //       // Lookup the RoleAccess collection based on roleId
+  //       {
+  //         $lookup: {
+  //           from: 'RoleAccess', // The collection to join with
+  //           localField: 'roleId', // Local field in user model to match
+  //           foreignField: 'roleId', // Foreign field in RoleAccess collection
+  //           as: 'RoleAccess', // Alias for the resulting array
+  //         },
+  //       },
+  //       // Project the necessary fields (flatten the RoleAccess array and get only required fields)
+  //       {
+  //         $project: {
+  //           'RoleAccess.module': 1,  // Include module from RoleAccess
+  //           'RoleAccess.readAccess': 1,     // Include readAccess from RoleAccess
+  //           'RoleAccess.writeAccess': 1,    // Include writeAccess from RoleAccess
+  //         },
+  //       },
+  //       // Unwind the RoleAccess array (if present)
+  //       {
+  //         $unwind: {
+  //           path: '$RoleAccess',
+  //           preserveNullAndEmptyArrays: true, // Ensures an empty array is returned if no RoleAccess found
+  //         },
+  //       },
+  //       // Group the result back into an array (in case the unwind stage was used)
+  //       {
+  //         $group: {
+  //           _id: null, // You can use _id to group if needed, or just set it to null
+  //           RoleAccess: { $push: '$RoleAccess' }, // This will always return an array
+  //         },
+  //       },
+  //     ])
+  //     .exec();
+  
+  //   // Return the RoleAccess array, or an empty array if no access found
+  //   return accessSections.length > 0 ? accessSections[0].RoleAccess : [];
+  // }
+//   async getAccessSectionsByUserId(userId: any, roleId: any) {
+//     const accessSections = await this.userModel
+//         .aggregate([
+//             // Match the user by roleId
+//             {
+//                 $match: {
+//                     roleId: roleId, // Match the roleId passed as a parameter
+//                 },
+//             },
+//             // Lookup the RoleAccess collection based on roleId
+//             {
+//                 $lookup: {
+//                     from: 'RoleAccess', // The collection to join with
+//                     localField: 'roleId', // Local field in user model to match
+//                     foreignField: 'roleId', // Foreign field in RoleAccess collection
+//                     as: 'RoleAccess', // Alias for the resulting array
+//                 },
+//             },
+//             // Unwind the RoleAccess array (if present)
+//             {
+//                 $unwind: {
+//                     path: '$RoleAccess',
+//                     preserveNullAndEmptyArrays: true, // Ensures an empty array is returned if no RoleAccess found
+//                 },
+//             },
+//             // Lookup the modules collection based on RoleAccess.module field
+//             {
+//                 $lookup: {
+//                     from: 'modules', // The collection to join with
+//                     localField: 'RoleAccess.module', // Local field in RoleAccess
+//                     foreignField: '_id', // Foreign field in the modules collection
+//                     as: 'ModuleDetails', // Alias for the resulting array
+//                 },
+//             },
+//             // Unwind the ModuleDetails array
+//             {
+//                 $unwind: {
+//                     path: '$ModuleDetails',
+//                     preserveNullAndEmptyArrays: true, // Ensures an empty array is returned if no modules found
+//                 },
+//             },
+//             // Project the required fields
+//             {
+//                 $project: {
+//                     _id: 0, // Exclude _id field from the result
+//                     readAccess: '$RoleAccess.readAccess', // Include readAccess
+//                     writeAccess: '$RoleAccess.writeAccess', // Include writeAccess
+//                     module: '$ModuleDetails', // Include full module details
+//                 },
+//             },
+//             // Group the results into an array
+//             {
+//                 $group: {
+//                     _id: null,
+//                     accessSections: { $push: '$$ROOT' },
+//                 },
+//             },
+//         ])
+//         .exec();
+
+//     // Return the accessSections array or an empty array if no access found
+//     return accessSections.length > 0 ? accessSections[0].accessSections : [];
+// }
+
+async getAccessSectionsByUserId(userId: any, roleId: any) {
+  const accessSections = await this.userModel
       .aggregate([
-        {
-          $match: {
-            _id: userId,
+          {
+              $match: {
+                  roleId: roleId,
+              },
           },
-        },
-        {
-          $lookup: {
-            from: 'UserRole',
-            localField: '_id',
-            foreignField: 'userId',
-            as: 'UserRole',
+          {
+              $lookup: {
+                  from: 'RoleAccess',
+                  localField: 'roleId',
+                  foreignField: 'roleId',
+                  as: 'RoleAccess',
+              },
           },
-        },
-        {
-          $project: {
-            'UserRole.role': 1,
-            'UserRole.readAccess': 1,
-            'UserRole.writeAccess': 1,
+          {
+              $unwind: {
+                  path: '$RoleAccess',
+                  preserveNullAndEmptyArrays: true, 
+              },
           },
-        },
+          {
+              $set: {
+                  'RoleAccess.module': {
+                      $convert: {
+                          input: '$RoleAccess.module',
+                          to: 'objectId',
+                          onError: null,
+                          onNull: null,
+                      },
+                  },
+              },
+          },
+          {
+              $lookup: {
+                  from: 'Modules', 
+                  localField: 'RoleAccess.module',
+                  foreignField: '_id', 
+                  as: 'ModuleDetails',
+              },
+          },
+          {
+              $unwind: {
+                  path: '$ModuleDetails',
+                  preserveNullAndEmptyArrays: true, 
+              },
+          },
+          {
+              $project: {
+                  _id: 0, 
+                  readAccess: '$RoleAccess.readAccess', 
+                  writeAccess: '$RoleAccess.writeAccess', 
+                  module: '$ModuleDetails',
+              },
+          },
+          {
+              $group: {
+                  _id: null,
+                  accessSections: { $push: '$$ROOT' },
+              },
+          },
       ])
       .exec();
+  return accessSections.length > 0 ? accessSections[0].accessSections : [];
+}
 
-    return accessSections.length > 0 && accessSections[0]?.UserRole
-      ? accessSections[0].UserRole
-      : [];
-  }
 
   async fetchUserParticularSectionWriteAccess(accessTokenData, role) {
     const hasWriteAccess =
@@ -183,5 +403,21 @@ export class CommonService {
     // });
 
     // return await trashItem.save();
+  }
+
+  async controllerReadAccess(module: string, user: any) {
+    if (!user?.accessSections) {
+        console.warn('No access sections found for user');
+        return false;
+    }
+
+    return user.accessSections.some(
+        (accessSection) =>{
+          if(accessSection?.module.name === module){
+            return true;
+          }
+          return false;
+        }
+    );
   }
 }

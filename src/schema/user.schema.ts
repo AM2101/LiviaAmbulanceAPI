@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Types } from 'mongoose';
 import { USER_TYPE, ACCESS_TYPE } from '../constants/enum';
+import { Role, ROLE_MODEL } from './Role.schema';
 
 
 @Schema({ timestamps: true, collection: 'User' })
@@ -98,6 +99,9 @@ export class User {
     type: Date,
   })
   lastRefreshTokenGeneratedAt: Date;
+
+  @Prop({ type: Types.ObjectId, ref: ROLE_MODEL, index: true })
+    roleId: Types.ObjectId | Role;
 }
 
 export type UserDocument = User & Document;

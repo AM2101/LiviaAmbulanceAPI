@@ -1,6 +1,6 @@
 export enum USER_TYPE {
   ADMIN = 'ADMIN',
-  INSURER = 'INSURER',
+  USER = 'USER',
 }
 
 export enum ACCESS_TYPE {
@@ -35,19 +35,19 @@ export enum ROLE_TYPE_LIVIA_ADMIN {
 //   MANAGE_CLAIMS = 'MANAGE_CLAIMS',
 // }
 
-// export enum LIST_SORT_BY_FIELDS {
-//   firstName = 'firstName',
-//   lastName = 'lastName',
-//   email = 'email',
-//   phoneCode = 'phoneCode',
-//   phoneNumber = 'phoneNumber',
-//   access = 'access',
-//   isActive = 'isActive',
-//   lastLoginAt = 'lastLoginAt',
-//   createdAt = 'createdAt',
-//   createdBy = 'createdBy',
-//   insuranceCompanyName = 'insuranceCompanyName',
-// }
+export enum LIST_SORT_BY_FIELDS {
+  firstName = 'firstName',
+  lastName = 'lastName',
+  email = 'email',
+  phoneCode = 'phoneCode',
+  phoneNumber = 'phoneNumber',
+  access = 'access',
+  isActive = 'isActive',
+  lastLoginAt = 'lastLoginAt',
+  createdAt = 'createdAt',
+  createdBy = 'createdBy',
+  insuranceCompanyName = 'insuranceCompanyName',
+}
 
 // export enum LIST_SORT_BY_FIELDS_PROVIDER {
 //   firstName = 'firstName',
@@ -67,10 +67,10 @@ export enum ROLE_TYPE_LIVIA_ADMIN {
 //   totalIPAllowed = 'totalIPAllowed',
 // }
 
-// export enum LIST_SORT_ORDER_TYPE {
-//   asc = 'asc',
-//   desc = 'desc',
-// }
+export enum LIST_SORT_ORDER_TYPE {
+  asc = 'asc',
+  desc = 'desc',
+}
 
 export enum CONFIG_CODE {
   otp = 'otp',

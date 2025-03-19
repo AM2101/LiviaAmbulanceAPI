@@ -40,9 +40,11 @@ export class ManageSettingsGuard implements CanActivate {
       });
 
       const userId = new Types.ObjectId(payload._id);
+      const roleId = new Types.ObjectId(payload.roleId);
 
       const accessSections = await this.commonService.getAccessSectionsByUserId(
         userId,
+        roleId
       );
 
       const hasWriteAccess =

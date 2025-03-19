@@ -58,13 +58,10 @@ import {
           password: 1,
           type: 1,
           email: 1,
-          isSuperAdmin: 1,
-          insuranceCompanyId: 1,
-          insuranceCompanyName: 1,
-          otpMode: 1,
           firstName: 1,
           phoneCode: 1,
           phoneNumber: 1,
+          roleId: 1,
         },
       );
   
@@ -202,6 +199,7 @@ import {
       }
   
       const _id = new Types.ObjectId(refreshTokenData._id);
+      const roleId = new Types.ObjectId(refreshTokenData.roleId);
       const user = await this.userModel.findOne(
         { _id: _id },
         {
@@ -237,6 +235,7 @@ import {
   
       const accessSections = await this.commonService.getAccessSectionsByUserId(
         _id,
+        roleId
       );
   
       const payloadForToken =
@@ -306,7 +305,7 @@ import {
     ) {
       const user = await this.userModel.findOne(
         { email: email },
-        { type: 1, isSuperAdmin: 1, email: 1, firstName: 1 },
+        { type: 1, isSuperAdmin: 1, email: 1, firstName: 1, roleId: 1 },
       );
       if (!user) {
         return { message: 'Reset password email is sent to registered email' };
@@ -314,9 +313,10 @@ import {
       if (user.type === USER_TYPE.ADMIN && user.isSuperAdmin) {
         return { message: 'Reset password email is sent to registered email' };
       }
-  
+      
       const accessSections = await this.commonService.getAccessSectionsByUserId(
         user._id,
+        user.roleId,
       );
   
       const passwordToken = await this.generatePasswordToken(
@@ -336,7 +336,7 @@ import {
         name: userName,
         resetPasswordLink,
       };
-      await this.sendEmail(context, rmqNotificationForgetEmail);
+      // await this.sendEmail(context, rmqNotificationForgetEmail);
   
       return { message: 'Reset password email is sent to registered email' };
     }
@@ -665,6 +665,7 @@ import {
           isSuperAdmin: 1,
           insuranceCompanyId: 1,
           insuranceCompanyName: 1,
+          roleId: 1,
         },
       );
   
@@ -792,12 +793,14 @@ import {
     }
       const accessSections = await this.commonService.getAccessSectionsByUserId(
         user._id,
+        user.roleId,
       );
   
       const payloadForToken =
         user.type === USER_TYPE.ADMIN
           ? {
               _id: user._id,
+              roleId: user.roleId,
               email: user.email,
               type: user.type,
               isSuperAdmin: user.isSuperAdmin,

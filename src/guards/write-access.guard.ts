@@ -40,16 +40,18 @@ export class WriteAccessGuard implements CanActivate {
       });
   
       const userId = new Types.ObjectId(payload._id);
+      const roleId = new Types.ObjectId(payload.roleId);
   
       const accessSections = await this.commonService.getAccessSectionsByUserId(
         userId,
+        roleId,
       );
   
       const hasWriteAccess =
         accessSections.length > 0
           ? accessSections.filter((obj) => {
               if (
-                obj.role === ROLE_TYPE_LIVIA_ADMIN.MANAGE_USERS &&
+                obj.module.name === context.getClass().name &&
                 obj.writeAccess === true
               ) {
                 return true;
@@ -59,12 +61,24 @@ export class WriteAccessGuard implements CanActivate {
             }).length > 0
           : false;
   
+          if(!hasWriteAccess){
+            throw new UnauthorizedException('Access denied');
+          }
+
       if (hasWriteAccess) {
-        return true;
+        const user = payload;
+        console.log('User:', user);
+
+        const module = context.getClass().name;
+        console.log('Controller tag:', module);
+
+        const hasAccess = await this.commonService.controllerReadAccess(module, user);
+        if (!hasAccess) {
+          throw new UnauthorizedException('Access denied');
+        }
       }
   
-      // Ensure we return false if access is not granted
-      return false;
+      return true;
   
     } catch (error) {
       console.log('----------------ERROR---------------');

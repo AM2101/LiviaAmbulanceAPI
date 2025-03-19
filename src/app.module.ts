@@ -10,6 +10,7 @@ import mongoose from 'mongoose';
 import { MongooseModelModule } from './mongoose_models_module/mongoose-models.module';
 import { DatabaseModule } from './infra/mongoose/database.module';
 import { SharedModule } from './common/shared.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { SharedModule } from './common/shared.module';
     JwtModule.register({
       global: true,
     }),
-    AuthModule,MongooseModelModule,DatabaseModule,SharedModule
+    AuthModule, MongooseModelModule, DatabaseModule, SharedModule, 
+    // UserModule
   ],
   controllers: [AppController],
   providers: [AppService],

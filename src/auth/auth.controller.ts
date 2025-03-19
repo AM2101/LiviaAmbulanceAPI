@@ -9,6 +9,8 @@ import {
     Request,
     UseGuards,
     Inject,
+    Get,
+    OnModuleInit,
   } from '@nestjs/common';
   import { AuthService } from './auth.service';
   import {
@@ -20,7 +22,7 @@ import {
     ResendOtpDto,
     ResetPasswordDto,
     VerifyOtpDto,
-  } from './dto/auth.dto';
+   } from './dto/auth.dto';
   import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
   import {
     CHANGE_PASSWORD_OUTPUT,
@@ -34,7 +36,9 @@ import {
   import { ClientProxy } from '@nestjs/microservices';
   import { StatusGuard } from '../guards/status.guard';
   import { WriteAccessGuard } from '../guards/write-access.guard';
-  
+import { ReadAccessGuard } from 'src/guards/read-access.guard';
+import { CommonService } from 'src/common/common.service';
+
   @ApiTags('Auth')
   @Controller('auth')
   @ApiTags('Auth')
@@ -47,8 +51,13 @@ import {
     //   @Inject('RMQ_NOTIFICATION_OTP_SMS')
     //   private rmqNotificationOtpSms: ClientProxy,
       private authService: AuthService,
-    ) {}
-  
+      private commonService: CommonService,
+    ) {
+      // this.commonService.controllerReadAccess('AuthController')
+    }
+    // onModuleInit() {
+    //   this.commonService.controllerReadAccess('MANAGE_USERS', null);
+    // }
     @HttpCode(200)
     @Post('login')
     @UsePipes(ValidationPipe)
@@ -109,7 +118,7 @@ import {
   
     @UseGuards(AuthGuard)
     @UseGuards(StatusGuard)
-    @UseGuards(WriteAccessGuard)
+    // @UseGuards(WriteAccessGuard)
     @HttpCode(200)
     @Patch('changePassword')
     @UsePipes(ValidationPipe)
@@ -204,6 +213,17 @@ import {
     })
     async verifyOtp(@Body() verifyOtpDto: VerifyOtpDto) {
       return await this.authService.verifyOtp(verifyOtpDto);
+    } 
+
+    @UseGuards(AuthGuard)
+    @UseGuards(StatusGuard)
+    @UseGuards(ReadAccessGuard)
+    @ApiBearerAuth()
+    @Get('test')
+    @HttpCode(200)
+    async test() {
+      return 'Hello World!';  
     }
+    
   }
   

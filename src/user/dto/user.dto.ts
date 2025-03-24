@@ -113,93 +113,93 @@ export class AddUserDto {
   // })
   // insuranceCompanyId?: string;
 
-  @ApiPropertyOptional({ enum: ACCESS_TYPE, example: 'FULL | PARTIAL' })
-  @IsEnum(ACCESS_TYPE)
-  @IsOptional()
-  access?: ACCESS_TYPE;
+  // @ApiPropertyOptional({ enum: ACCESS_TYPE, example: 'FULL | PARTIAL' })
+  // @IsEnum(ACCESS_TYPE)
+  // @IsOptional()
+  // access?: ACCESS_TYPE;
 
-  @ApiProperty({
-    type: [AccessSections],
-    example: [
-      {
-        role: 'MANAGE_USERS',
-        readAccess: true,
-        writeAccess: true,
-      },
-      // {
-      //   role: 'MANAGE_BENEFITS_SUB_BENEFITS',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-      // {
-      //   role: 'MANAGE_BUSINESS_PARTNERS',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-      // {
-      //   role: 'MANAGE_INSURANCE_MEMBERS',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-      // {
-      //   role: 'MANAGE_SCHEMES',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-      // {
-      //   role: 'MANAGE_POLICIES',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-      // {
-      //   role: 'MANAGE_MEMBER_POLICIES',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-      // {
-      //   role: 'MANAGE_EXTENDED_BENEFITS',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-      // {
-      //   role: 'MANAGE_REPORTS',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-      // {
-      //   role: 'MANAGE_CLAIMS',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-      // {
-      //   role: 'MANAGE_PROVIDERS',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-      // {
-      //   role: 'MANAGE_SETTINGS',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-      // {
-      //   role: 'MANAGE_SUPPORT',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-      // {
-      //   role: 'MANAGE_LOGS',
-      //   readAccess: true,
-      //   writeAccess: true,
-      // },
-    ],
-  })
-  @IsNotEmpty()
-  @IsArray()
-  @ArrayMinSize(1)
-  @ArrayMaxSize(14)
-  @ValidateNested({ each: true })
-  @Type(() => AccessSections)
-  accessSections: AccessSections[];
+  // @ApiProperty({
+  //   type: [AccessSections],
+  //   example: [
+  //     {
+  //       role: 'MANAGE_USERS',
+  //       readAccess: true,
+  //       writeAccess: true,
+  //     },
+  //     // {
+  //     //   role: 'MANAGE_BENEFITS_SUB_BENEFITS',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //     // {
+  //     //   role: 'MANAGE_BUSINESS_PARTNERS',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //     // {
+  //     //   role: 'MANAGE_INSURANCE_MEMBERS',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //     // {
+  //     //   role: 'MANAGE_SCHEMES',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //     // {
+  //     //   role: 'MANAGE_POLICIES',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //     // {
+  //     //   role: 'MANAGE_MEMBER_POLICIES',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //     // {
+  //     //   role: 'MANAGE_EXTENDED_BENEFITS',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //     // {
+  //     //   role: 'MANAGE_REPORTS',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //     // {
+  //     //   role: 'MANAGE_CLAIMS',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //     // {
+  //     //   role: 'MANAGE_PROVIDERS',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //     // {
+  //     //   role: 'MANAGE_SETTINGS',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //     // {
+  //     //   role: 'MANAGE_SUPPORT',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //     // {
+  //     //   role: 'MANAGE_LOGS',
+  //     //   readAccess: true,
+  //     //   writeAccess: true,
+  //     // },
+  //   ],
+  // })
+  // @IsNotEmpty()
+  // @IsArray()
+  // @ArrayMinSize(1)
+  // @ArrayMaxSize(14)
+  // @ValidateNested({ each: true })
+  // @Type(() => AccessSections)
+  // accessSections: AccessSections[];
 }
 
 export class AddLiviaAdminSuperUserDto {

@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { SharedModule } from 'src/common/shared.module';
 import { ConfigModule } from '@nestjs/config';
+import { CommonService } from 'src/common/common.service';
 
 @Module({
    imports: [
@@ -54,6 +55,6 @@ import { ConfigModule } from '@nestjs/config';
       }),
       SharedModule,  ],
   controllers: [UserController],
-  providers: [UserService]
+  providers: [UserService, CommonService]
 })
 export class UserModule {}

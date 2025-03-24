@@ -41,6 +41,6 @@ export class UserController {
     @Post('addUser')
     @HttpCode(200)
     async addUser(@Body() addUserDto: AddUserDto, @Request() req) {
-        // return await this.userService.addUser(addUserDto, req);
+        return await this.userService.addUser(addUserDto, req);
     }
 }

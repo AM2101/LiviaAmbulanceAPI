@@ -15,6 +15,7 @@ import { USER_MODEL, UserDocument } from '../schema/user.schema';
 // import { COUNTRY_MODEL, CountryDocument } from '../schema/country.schema';
 // import { TRASH_MODEL, TrashDocument } from '../schema/trash.schema';
 import * as bcrypt from 'bcrypt';
+import { COUNTRY_MODEL, CountryDocument } from 'src/schema/country.schema';
 
 
 @Injectable()
@@ -23,17 +24,17 @@ export class CommonService {
     @InjectModel(USER_MODEL) private userModel: Model<UserDocument>,
     // @InjectModel(INSURANCE_COMPANY_MODEL)
     // private insuranceCompanyModel: Model<InsuranceCompanyDocument>,
-    // @InjectModel(COUNTRY_MODEL) private countryModel: Model<CountryDocument>,
+    @InjectModel(COUNTRY_MODEL) private countryModel: Model<CountryDocument>,
     // @InjectModel(TRASH_MODEL) private trashModel: Model<TrashDocument>,
   ) { }
 
-  // async getCountryCodes() {
-  //   try {
-  //     return await this.countryModel.find({}, { _id: 0 });
-  //   } catch (error) {
-  //     throw new InternalServerErrorException(error.message);
-  //   }
-  // }
+  async getCountryCodes() {
+    try {
+      return await this.countryModel.find({}, { _id: 0 });
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
 
   async findOneAndUpdate(userId, editUserDto, fieldToUpdate, existing_user) {
     try {

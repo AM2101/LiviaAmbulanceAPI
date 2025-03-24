@@ -1,4 +1,5 @@
 export enum USER_TYPE {
+  SUPERADMIN = 'SUPERADMIN',
   ADMIN = 'ADMIN',
   USER = 'USER',
 }

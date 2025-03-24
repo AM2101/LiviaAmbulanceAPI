@@ -34,7 +34,7 @@ import { UserModule } from './user/user.module';
       global: true,
     }),
     AuthModule, MongooseModelModule, DatabaseModule, SharedModule, 
-    // UserModule
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService],

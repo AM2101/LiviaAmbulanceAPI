@@ -210,11 +210,6 @@ export class UpdateRoleAccessDto {
   updates: ModuleUpdateDto[];
 }
 
-export class UpdateAccessDto {
-  @IsArray()
-  @IsNotEmpty()
-  accesses: AccessItem[];
-}
 
 class AccessItem {
   @IsString()
@@ -228,4 +223,19 @@ class AccessItem {
   @IsBoolean()
   @IsNotEmpty()
   writeAccess: boolean;
+}
+
+
+export class UpdateAccessDto {
+  @ApiProperty({ example: '67d17f8b158ea83b44b76b6d', description: 'Role ID' })
+  @IsString()
+  roleId: string;
+
+  @ApiProperty({ type: [AccessItem] })
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => AccessItem)
+  @IsNotEmpty()
+  accesses: AccessItem[];
+
 }

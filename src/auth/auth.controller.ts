@@ -345,6 +345,8 @@ export class AuthController {
   })
   @ApiOperation({ summary: 'Update access details' })
   async updateAccess(@Body() updateAccessDto: UpdateAccessDto) {
+    console.log('updateAccessDto', updateAccessDto);
+
     return this.authService.updateAccess(updateAccessDto);
   }
 

@@ -810,7 +810,7 @@ export class AuthService {
       user._id,
       user.roleId,
     );
-    
+
 
     const payloadForToken =
       user.type === USER_TYPE.ADMIN
@@ -876,7 +876,7 @@ export class AuthService {
           accessToken: accessToken,
           refreshToken: refreshToken,
         },
-        
+
       };
     }
   }
@@ -990,14 +990,48 @@ export class AuthService {
     return !!result;
   }
 
+  // async updateAccess(updateAccessDto: UpdateAccessDto): Promise<any> {
+  //   const { roleId,accesses } = updateAccessDto;
+
+  //   const bulkOperations = accesses.map((access) => ({
+  //     updateOne: {
+  //       filter: { module: access.module },
+  //       update: { $set: { readAccess: access.readAccess, writeAccess: access.writeAccess } },
+  //       upsert: true, // This ensures that if a module doesn't exist, it will be created
+  //     },
+  //   }));
+
+  //   if (bulkOperations.length > 0) {
+  //     await this.accessModel.bulkWrite(bulkOperations);
+  //   }
+
+  //   return {
+  //     statusCode: HttpStatus.OK,
+  //     message: 'Access updated successfully',
+  //   };
+  // }
+
+
+
+
+
   async updateAccess(updateAccessDto: UpdateAccessDto): Promise<any> {
-    const { accesses } = updateAccessDto;
+    const { roleId, accesses } = updateAccessDto;
+
+    // Convert roleId to ObjectId
+    const roleObjectId = new Types.ObjectId(roleId);
 
     const bulkOperations = accesses.map((access) => ({
       updateOne: {
-        filter: { module: access.module },
-        update: { $set: { readAccess: access.readAccess, writeAccess: access.writeAccess } },
-        upsert: true, // This ensures that if a module doesn't exist, it will be created
+        filter: { roleId: roleObjectId, module: access.module.toString() }, // Convert module to string
+        update: {
+          $set: {
+            readAccess: Boolean(access.readAccess),
+            writeAccess: Boolean(access.writeAccess),
+            roleId: roleObjectId // Store roleId as ObjectId
+          }
+        },
+        upsert: true, // Insert if not exists
       },
     }));
 
@@ -1010,6 +1044,8 @@ export class AuthService {
       message: 'Access updated successfully',
     };
   }
+
+
 
 
 

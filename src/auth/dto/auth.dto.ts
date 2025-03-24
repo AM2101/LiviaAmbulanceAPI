@@ -1,12 +1,14 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
+  IsArray,
   IsBoolean,
   IsEmail,
   IsNotEmpty,
   IsOptional,
   IsString,
   Matches,
+  ValidateNested,
 } from 'class-validator';
 
 export class LoginDto {
@@ -119,4 +121,111 @@ export class VerifyOtpDto {
   @IsString()
   @IsNotEmpty()
   OTP: string;
+}
+
+export class RoleDto {
+  @ApiProperty({ example: '67d17f8b158ea83b44b76b6d', description: 'Role ID' })
+  @IsString()
+  _id: string;
+
+  @ApiProperty({ example: 'Super Admin', description: 'Name of the role' })
+  @IsString()
+  roleName: string;
+}
+
+export class CountryDto {
+
+  @ApiProperty({ example: 'india', description: 'Name of the country' })
+  @IsString()
+  name: string;
+
+  @ApiProperty({ example: '91', description: 'Phone code of the country' })
+  @IsString()
+  phoneCode: string;
+}
+
+
+export class ModuleDto {
+  @ApiProperty({ example: '67d81eaf100c23377b5aee59', description: 'Unique identifier' })
+  @IsString()
+  _id: string;
+
+  @ApiProperty({ example: 'AuthController', description: 'Name of the module/controller' })
+  @IsString()
+  name: string;
+}
+
+export class AccessDto {
+  @ApiProperty({ example: '67d18a90158ea83b44b76b7b', description: 'Unique identifier for the access record' })
+  @IsString()
+  _id: string;
+
+  @ApiProperty({ example: '67d17f8b158ea83b44b76b6d', description: 'Role ID associated with the access' })
+  @IsString()
+  roleId: string;
+
+  @ApiProperty({ example: true, description: 'Read access permission' })
+  @IsBoolean()
+  readAccess: boolean;
+
+  @ApiProperty({ example: true, description: 'Write access permission' })
+  @IsBoolean()
+  writeAccess: boolean;
+
+  @ApiProperty({ example: '67d81eaf100c23377b5aee59', description: 'Module ID associated with the access' })
+  @IsString()
+  module: string;
+}
+
+export class ModuleandAccessDto {
+  @ApiProperty({ type: ModuleDto, description: 'Module details' })
+  module: ModuleDto;
+
+  @ApiProperty({ type: AccessDto, description: 'Access details' })
+  access: AccessDto;
+}
+
+export class CreateRoleDto {
+  @IsString()
+  @IsNotEmpty()
+  roleName: string;
+}
+
+
+class ModuleUpdateDto {
+  @IsString()
+  module: string;
+
+  @IsBoolean()
+  readAccess: boolean;
+
+  @IsBoolean()
+  writeAccess: boolean;
+}
+
+export class UpdateRoleAccessDto {
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => ModuleUpdateDto)
+  updates: ModuleUpdateDto[];
+}
+
+export class UpdateAccessDto {
+  @IsArray()
+  @IsNotEmpty()
+  accesses: AccessItem[];
+}
+
+class AccessItem {
+  @IsString()
+  @IsNotEmpty()
+  module: string;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  readAccess: boolean;
+
+  @IsBoolean()
+  @IsNotEmpty()
+  writeAccess: boolean;
 }

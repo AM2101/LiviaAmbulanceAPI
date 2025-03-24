@@ -827,6 +827,7 @@ export class AuthService {
           email: user.email,
           type: user.type,
           isSuperAdmin: user.isSuperAdmin,
+          roleId: user.roleId,
           //   insuranceCompanyId: user.insuranceCompanyId,
           //   insuranceCompanyName: user.insuranceCompanyName,
           accessSections: accessSections,
